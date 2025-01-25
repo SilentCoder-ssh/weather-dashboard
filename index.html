@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Météo</title>
+  </head>
+  <body>
+    <header>
+      <h1>Dashboard Météo</h1>
+      <p>Informations météorologiques en temps réel</p>
+    </header>
+
+    <main>
+      <section id="location-search">
+        <h2>Rechercher une Localisation</h2>
+        <div>
+          <input
+            type="text"
+            id="location-input"
+            placeholder="Entrez une ville ou des coordonnées"
+          />
+          <button type="button" id="search-button">Rechercher</button>
+        </div>
+      </section>
+
+      <!-- Section pour les informations actuelles -->
+      <section id="current-weather">
+        <h2>Conditions Actuelles</h2>
+        <div>
+          <p>
+            <strong>Température:</strong>
+            <span id="current-temperature">--</span> °C
+          </p>
+          <p>
+            <strong>Code Météo:</strong>
+            <span id="current-weather-code">--</span>
+          </p>
+          <p>
+            <strong>Description:</strong>
+            <span id="current-weather-description">--</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- Section pour les prévisions horaires -->
+      <section id="hourly-forecast">
+        <h2>Prévisions Horaires</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Heure</th>
+              <th>Température (°C)</th>
+              <th>Code Météo</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="hourly-forecast-data">
+            <!-- Les lignes seront ajoutées dynamiquement ici -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section pour les informations supplémentaires -->
+      <section id="additional-info">
+        <h2>Informations Supplémentaires</h2>
+        <div>
+          <p><strong>Latitude:</strong> <span id="latitude">--</span></p>
+          <p><strong>Longitude:</strong> <span id="longitude">--</span></p>
+          <p><strong>Fuseau Horaire:</strong> <span id="timezone">--</span></p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Données fournies par
+        <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a>
+      </p>
+    </footer>
+  </body>
+</html>
