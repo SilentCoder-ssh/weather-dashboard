@@ -1,4 +1,5 @@
 import { findData, locationInput } from "../datas/data";
+import { updateElement } from "../utils/update-elements";
 
 const searchButton: HTMLButtonElement = document.querySelector(
   "#search-button"
@@ -48,9 +49,7 @@ const currentWeatherPrecipitation: HTMLSpanElement = document.querySelector(
   "#current-weather-precipitation"
 )! as HTMLSpanElement;
 
-if (!currentIconCondition.src)
-  currentIconCondition.style.display = "none";
-
+if (!currentIconCondition.src) currentIconCondition.style.display = "none";
 
 searchButton?.addEventListener("click", async (_) => {
   const cityName = locationInput.value.trim();
@@ -58,15 +57,19 @@ searchButton?.addEventListener("click", async (_) => {
 
   currentDateLastUpdated.textContent = weatherData.current.last_updated;
 
-  currentCondition.textContent = weatherData.current.condition.text;
-  currentIconCondition.src = weatherData.current.condition.icon;
-  currentIconCondition.alt = "icon-condition";
-  currentTemperature.textContent = weatherData.current.temp_c;
-  currentTemperatureFeel.textContent = weatherData.current.feelslike_c;
-  currentWeatherCode.textContent = weatherData.current.condition.code;
-  currentWeatherCloud.textContent = weatherData.current.cloud;
-  currentWeatherWind.textContent = weatherData.current.wind_kph;
-  currentWeatherWindDir.textContent = weatherData.current.wind_dir;
-  currentWeatherWindDirDegree.textContent = weatherData.current.wind_degree;
-  currentWeatherPrecipitation.textContent = weatherData.current.precip_mm;
+updateElement(currentDateLastUpdated, weatherData?.current?.last_updated);
+updateElement(currentCondition, weatherData?.current?.condition?.text);
+updateElement(currentTemperature, weatherData?.current?.temp_c);
+updateElement(currentTemperatureFeel, weatherData?.current?.feelslike_c);
+updateElement(currentWeatherCode, weatherData?.current?.condition?.code);
+updateElement(currentWeatherCloud, weatherData?.current?.cloud);
+updateElement(currentWeatherWind, weatherData?.current?.wind_kph);
+updateElement(currentWeatherWindDir, weatherData?.current?.wind_dir);
+updateElement(currentWeatherWindDirDegree, weatherData?.current?.wind_degree);
+updateElement(currentWeatherPrecipitation, weatherData?.current?.precip_mm);
+
+if(weatherData?.current?.condition?.icon) {
+    currentIconCondition.src = weatherData.current.condition.icon;
+    currentIconCondition.alt = "icon-condition"
+}
 });
