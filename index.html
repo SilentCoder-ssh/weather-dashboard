@@ -28,11 +28,18 @@
       <!-- Section pour les informations actuelles -->
       <section id="current-weather">
         <h2>Conditions Actuelles</h2>
-        <h3>(Date des dernières données : <span id="last-updated">--</span>)</h3>
+        <h3>
+          (Date des dernières données : <span id="last-updated">--</span>)
+        </h3>
         <div>
-           <p>
+          <p>
+            <strong>Code Météo:</strong>
+            <span id="current-weather-code">--</span>
+          </p>
+          <p>
             <strong>Conditions météorologiques:</strong>
-            <span id="current-condition">--</span><img id="icon-condition" src="">
+            <span id="current-condition">--</span
+            ><img id="icon-condition" src="" />
           </p>
           <p>
             <strong>Température:</strong>
@@ -41,10 +48,6 @@
           <p>
             <strong>Température ressentie:</strong>
             <span id="current-temperature-feel">--</span> °C
-          </p>
-          <p>
-            <strong>Code Météo:</strong>
-            <span id="current-weather-code">--</span>
           </p>
           <p>
             <strong>Cloud:</strong>

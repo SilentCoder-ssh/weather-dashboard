@@ -55,21 +55,19 @@ searchButton?.addEventListener("click", async (_) => {
   const cityName = locationInput.value.trim();
   const weatherData = await findData(`${cityName}`);
 
-  currentDateLastUpdated.textContent = weatherData.current.last_updated;
+  updateElement(currentDateLastUpdated, weatherData?.current?.last_updated);
+  updateElement(currentCondition, weatherData?.current?.condition?.text);
+  updateElement(currentTemperature, weatherData?.current?.temp_c);
+  updateElement(currentTemperatureFeel, weatherData?.current?.feelslike_c);
+  updateElement(currentWeatherCode, weatherData?.current?.condition?.code);
+  updateElement(currentWeatherCloud, weatherData?.current?.cloud);
+  updateElement(currentWeatherWind, weatherData?.current?.wind_kph);
+  updateElement(currentWeatherWindDir, weatherData?.current?.wind_dir);
+  updateElement(currentWeatherWindDirDegree, weatherData?.current?.wind_degree);
+  updateElement(currentWeatherPrecipitation, weatherData?.current?.precip_mm);
 
-updateElement(currentDateLastUpdated, weatherData?.current?.last_updated);
-updateElement(currentCondition, weatherData?.current?.condition?.text);
-updateElement(currentTemperature, weatherData?.current?.temp_c);
-updateElement(currentTemperatureFeel, weatherData?.current?.feelslike_c);
-updateElement(currentWeatherCode, weatherData?.current?.condition?.code);
-updateElement(currentWeatherCloud, weatherData?.current?.cloud);
-updateElement(currentWeatherWind, weatherData?.current?.wind_kph);
-updateElement(currentWeatherWindDir, weatherData?.current?.wind_dir);
-updateElement(currentWeatherWindDirDegree, weatherData?.current?.wind_degree);
-updateElement(currentWeatherPrecipitation, weatherData?.current?.precip_mm);
-
-if(weatherData?.current?.condition?.icon) {
+  if (weatherData?.current?.condition?.icon) {
     currentIconCondition.src = weatherData.current.condition.icon;
-    currentIconCondition.alt = "icon-condition"
-}
+    currentIconCondition.alt = "icon-condition";
+  }
 });
