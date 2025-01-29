@@ -1,73 +1,88 @@
 import { findData, locationInput } from "../datas/data";
-import { updateElement } from "../utils/update-elements";
+
+interface LocationData {
+  country: string;
+  lat: number;
+  localtime: string;
+  localtime_epoch: number;
+  lon: number;
+  name: string;
+  region: string;
+  tz_id: string;
+}
+
+interface WeatherCondition {
+  code: number;
+  icon: string;
+  text: string;
+}
+
+interface CurrentWeather {
+  cloud: number;
+  condition: WeatherCondition;
+  dewpoint_c: number;
+  dewpoint_f: number;
+  feelslike_c: number;
+  feelslike_f: number;
+  gust_kph: number;
+  gust_mph: number;
+  heatindex_c: number;
+  heatindex_f: number;
+  humidity: number;
+  is_day: number;
+  last_updated: string;
+  last_updated_epoch: number;
+  precip_in: number;
+  precip_mm: number;
+  pressure_in: number;
+  pressure_mb: number;
+  temp_c: number;
+  temp_f: number;
+  uv: number;
+  vis_km: number;
+  vis_miles: number;
+  wind_degree: number;
+  wind_dir: string;
+  wind_kph: number;
+  wind_mph: number;
+  windchill_c: number;
+  windchill_f: number;
+}
+
+type PropsCurrentWeather = keyof CurrentWeather;
+
+interface WeatherData {
+  location: LocationData;
+  current: CurrentWeather;
+}
 
 const searchButton: HTMLButtonElement = document.querySelector(
   "#search-button"
 )! as HTMLButtonElement;
 
-const currentDateLastUpdated: HTMLSpanElement = document.querySelector(
-  "#last-updated"
-)! as HTMLSpanElement;
+const getDatasetWeather = (data: CurrentWeather) => {
+  const elements = document.querySelectorAll<HTMLElement>("[data-weather]");
+  const weatherElements: Partial<Record<PropsCurrentWeather, HTMLElement>> = {};
 
-const currentCondition: HTMLSpanElement = document.querySelector(
-  "#current-condition"
-)! as HTMLSpanElement;
+  Array.from(elements).forEach((element) => {
+    const weatherKey = element.getAttribute("data-weather");
+    if (weatherKey) {
+      weatherElements[weatherKey as PropsCurrentWeather] = element;
+    }
+  });
 
-const currentIconCondition: HTMLImageElement = document.querySelector(
-  "#icon-condition"
-)! as HTMLImageElement;
+  Object.entries(weatherElements).forEach(([key, value]) => {
+    if (key in data) {
+      value.textContent = `${data[key as keyof CurrentWeather]}`;
+    }
+  });
 
-const currentTemperature: HTMLSpanElement = document.querySelector(
-  "#current-temperature"
-)! as HTMLSpanElement;
-
-const currentTemperatureFeel: HTMLSpanElement = document.querySelector(
-  "#current-temperature-feel"
-)! as HTMLSpanElement;
-
-const currentWeatherCode: HTMLSpanElement = document.querySelector(
-  "#current-weather-code"
-)! as HTMLSpanElement;
-
-const currentWeatherCloud: HTMLSpanElement = document.querySelector(
-  "#current-weather-cloud"
-)! as HTMLSpanElement;
-
-const currentWeatherWind: HTMLSpanElement = document.querySelector(
-  "#current-weather-wind"
-)! as HTMLSpanElement;
-
-const currentWeatherWindDir: HTMLSpanElement = document.querySelector(
-  "#current-weather-wind-dir"
-)! as HTMLSpanElement;
-
-const currentWeatherWindDirDegree: HTMLSpanElement = document.querySelector(
-  "#current-weather-wind-dir-degree"
-)! as HTMLSpanElement;
-
-const currentWeatherPrecipitation: HTMLSpanElement = document.querySelector(
-  "#current-weather-precipitation"
-)! as HTMLSpanElement;
-
-if (!currentIconCondition.src) currentIconCondition.style.display = "none";
+  console.log("Elements mappés:", weatherElements);
+  return weatherElements;
+};
 
 searchButton?.addEventListener("click", async (_) => {
   const cityName = locationInput.value.trim();
-  const weatherData = await findData(`${cityName}`);
-
-  updateElement(currentDateLastUpdated, weatherData?.current?.last_updated);
-  updateElement(currentCondition, weatherData?.current?.condition?.text);
-  updateElement(currentTemperature, weatherData?.current?.temp_c);
-  updateElement(currentTemperatureFeel, weatherData?.current?.feelslike_c);
-  updateElement(currentWeatherCode, weatherData?.current?.condition?.code);
-  updateElement(currentWeatherCloud, weatherData?.current?.cloud);
-  updateElement(currentWeatherWind, weatherData?.current?.wind_kph);
-  updateElement(currentWeatherWindDir, weatherData?.current?.wind_dir);
-  updateElement(currentWeatherWindDirDegree, weatherData?.current?.wind_degree);
-  updateElement(currentWeatherPrecipitation, weatherData?.current?.precip_mm);
-
-  if (weatherData?.current?.condition?.icon) {
-    currentIconCondition.src = weatherData.current.condition.icon;
-    currentIconCondition.alt = "icon-condition";
-  }
+  const weatherData: WeatherData = await findData(`${cityName}`);
+  getDatasetWeather(weatherData.current);
 });

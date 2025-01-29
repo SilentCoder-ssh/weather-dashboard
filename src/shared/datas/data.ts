@@ -6,9 +6,11 @@ export const locationInput: HTMLInputElement = document.querySelector(
   "#location-input"
 )! as HTMLInputElement;
 
+
 export async function findData(cityName: string): Promise<any> {
-  const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${cityName}`;
-  let data = {}
+  const racine = "https://api.weatherapi.com/v1"; 
+  const url = `${racine}/current.json?key=${apiKey}&q=${cityName}`;
+  let data;
  
   try {
     const response: Response = await fetch(url);

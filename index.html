@@ -1,111 +1,175 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="/src/main.ts"></script>
-    <title>Dashboard Météo</title>
-  </head>
-  <body class="bg-blue-2">
-    <header>
-      <h1>Dashboard Météo</h1>
-      <p>Informations météorologiques en temps réel</p>
-    </header>
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <script type="module" src="/src/main.ts"></script>
+   <title>Dashboard Météo</title>
+ </head>
+ <body class="bg-blue-2">
+   <header>
+     <h1>Dashboard Météo</h1>
+     <p>Informations météorologiques en temps réel</p>
+   </header>
+   <main>
+     <section id="location-search">
+       <h2>Rechercher une Localisation</h2>
+       <div>
+         <input
+           type="text"
+           id="location-input"
+           placeholder="Entrez une ville ou des coordonnées"
+           data-search="location"
+         />
+         <button type="button" id="search-button" data-action="search">Rechercher</button>
+       </div>
+     </section>
 
-    <main>
-      <section id="location-search">
-        <h2>Rechercher une Localisation</h2>
-        <div>
-          <input
-            type="text"
-            id="location-input"
-            placeholder="Entrez une ville ou des coordonnées"
-          />
-          <button type="button" id="search-button">Rechercher</button>
-        </div>
-      </section>
+     <section id="current-weather" data-section="current">
+       <h2>Conditions Actuelles</h2>
+       <h3>
+         (Date des dernières données : <span id="last-updated" data-weather="last_updated">--</span>)
+         (<span id="last-updated-epoch" data-weather="last_updated_epoch">--</span>)
+       </h3>
+       <div class="weather-info">
+         <!-- Conditions -->
+         <p>
+           <strong>Code Météo:</strong>
+           <span id="current-weather-code" data-weather="condition.code">--</span>
+         </p>
+         <p>
+           <strong>Conditions météorologiques:</strong>
+           <span id="current-condition" data-weather="condition.text">--</span>
+           <img id="icon-condition" src="" data-weather="condition.icon" alt="icon-condition"/>
+         </p>
 
-      <!-- Section pour les informations actuelles -->
-      <section id="current-weather">
-        <h2>Conditions Actuelles</h2>
-        <h3>
-          (Date des dernières données : <span id="last-updated">--</span>)
-        </h3>
-        <div>
-          <p>
-            <strong>Code Météo:</strong>
-            <span id="current-weather-code">--</span>
-          </p>
-          <p>
-            <strong>Conditions météorologiques:</strong>
-            <span id="current-condition">--</span
-            ><img id="icon-condition" src="" />
-          </p>
-          <p>
-            <strong>Température:</strong>
-            <span id="current-temperature">--</span> °C
-          </p>
-          <p>
-            <strong>Température ressentie:</strong>
-            <span id="current-temperature-feel">--</span> °C
-          </p>
-          <p>
-            <strong>Cloud:</strong>
-            <span id="current-weather-cloud">--</span>
-          </p>
-          <p>
-            <strong>Vitesse du vent:</strong>
-            <span id="current-weather-wind">--</span> km/h
-          </p>
-          <p>
-            <strong>Direction du vent en 16 points:</strong>
-            <span id="current-weather-wind-dir">--</span>
-          </p>
-          <p>
-            <strong>Direction du vent en degrés:</strong>
-            <span id="current-weather-wind-dir-degree">--</span> °
-          </p>
-          <p>
-            <strong>Quantité de précipitations:</strong>
-            <span id="current-weather-precipitation">--</span> mm
-          </p>
-        </div>
-      </section>
+         <!-- Températures -->
+         <p>
+           <strong>Température:</strong>
+           <span id="current-temperature-c" data-weather="temp_c">--</span> °C /
+           <span id="current-temperature-f" data-weather="temp_f">--</span> °F
+         </p>
+         <p>
+           <strong>Température ressentie:</strong>
+           <span id="current-temperature-feel-c" data-weather="feelslike_c">--</span> °C /
+           <span id="current-temperature-feel-f" data-weather="feelslike_f">--</span> °F
+         </p>
 
-      <!-- Section pour les prévisions horaires -->
-      <section id="hourly-forecast">
-        <h2>Prévisions Horaires</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Heure</th>
-              <th>Température (°C)</th>
-              <th>Code Météo</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody id="hourly-forecast-data">
-            <!-- Les lignes seront ajoutées dynamiquement ici -->
-          </tbody>
-        </table>
-      </section>
+         <!-- Point de rosée -->
+         <p>
+           <strong>Point de rosée:</strong>
+           <span id="dewpoint-c" data-weather="dewpoint_c">--</span> °C /
+           <span id="dewpoint-f" data-weather="dewpoint_f">--</span> °F
+         </p>
 
-      <!-- Section pour les informations supplémentaires -->
-      <section id="additional-info">
-        <h2>Informations Supplémentaires</h2>
-        <div>
-          <p><strong>Latitude:</strong> <span id="latitude">--</span></p>
-          <p><strong>Longitude:</strong> <span id="longitude">--</span></p>
-          <p><strong>Fuseau Horaire:</strong> <span id="timezone">--</span></p>
-        </div>
-      </section>
-    </main>
+         <!-- Index de chaleur -->
+         <p>
+           <strong>Index de chaleur:</strong>
+           <span id="heatindex-c" data-weather="heatindex_c">--</span> °C /
+           <span id="heatindex-f" data-weather="heatindex_f">--</span> °F
+         </p>
 
-    <footer>
-      <p>
-        Données fournies par
-        <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a>
-      </p>
-    </footer>
-  </body>
+         <!-- Refroidissement éolien -->
+         <p>
+           <strong>Refroidissement éolien:</strong>
+           <span id="windchill-c" data-weather="windchill_c">--</span> °C /
+           <span id="windchill-f" data-weather="windchill_f">--</span> °F
+         </p>
+
+         <!-- Autres mesures -->
+         <p>
+           <strong>Humidité:</strong>
+           <span id="humidity" data-weather="humidity">--</span>%
+         </p>
+         <p>
+           <strong>Cloud:</strong>
+           <span id="current-weather-cloud" data-weather="cloud">--</span>%
+         </p>
+         <p>
+           <strong>UV:</strong>
+           <span id="uv-index" data-weather="uv">--</span>
+         </p>
+         <p>
+           <strong>Est-ce le jour:</strong>
+           <span id="is-day" data-weather="is_day">--</span>
+         </p>
+
+         <!-- Vent -->
+         <p>
+           <strong>Vitesse du vent:</strong>
+           <span id="wind-kph" data-weather="wind_kph">--</span> km/h /
+           <span id="wind-mph" data-weather="wind_mph">--</span> mph
+         </p>
+         <p>
+           <strong>Rafales:</strong>
+           <span id="gust-kph" data-weather="gust_kph">--</span> km/h /
+           <span id="gust-mph" data-weather="gust_mph">--</span> mph
+         </p>
+         <p>
+           <strong>Direction du vent:</strong>
+           <span id="wind-dir" data-weather="wind_dir">--</span>
+         </p>
+         <p>
+           <strong>Direction du vent (degrés):</strong>
+           <span id="wind-degree" data-weather="wind_degree">--</span>°
+         </p>
+
+         <!-- Précipitations -->
+         <p>
+           <strong>Précipitations:</strong>
+           <span id="precip-mm" data-weather="precip_mm">--</span> mm /
+           <span id="precip-in" data-weather="precip_in">--</span> in
+         </p>
+
+         <!-- Pression -->
+         <p>
+           <strong>Pression:</strong>
+           <span id="pressure-mb" data-weather="pressure_mb">--</span> mb /
+           <span id="pressure-in" data-weather="pressure_in">--</span> in
+         </p>
+
+         <!-- Visibilité -->
+         <p>
+           <strong>Visibilité:</strong>
+           <span id="vis-km" data-weather="vis_km">--</span> km /
+           <span id="vis-miles" data-weather="vis_miles">--</span> miles
+         </p>
+       </div>
+     </section>
+
+     <!-- Section pour les prévisions horaires -->
+     <section id="hourly-forecast" data-section="hourly">
+       <h2>Prévisions Horaires</h2>
+       <table>
+         <thead>
+           <tr>
+             <th>Heure</th>
+             <th>Température (°C)</th>
+             <th>Code Météo</th>
+             <th>Description</th>
+           </tr>
+         </thead>
+         <tbody id="hourly-forecast-data" data-forecast="hourly">
+           <!-- Les lignes seront ajoutées dynamiquement ici -->
+         </tbody>
+       </table>
+     </section>
+
+     <!-- Section pour les informations supplémentaires -->
+     <section id="additional-info" data-section="location">
+       <h2>Informations Supplémentaires</h2>
+       <div>
+         <p><strong>Latitude:</strong> <span id="latitude" data-location="latitude">--</span></p>
+         <p><strong>Longitude:</strong> <span id="longitude" data-location="longitude">--</span></p>
+         <p><strong>Fuseau Horaire:</strong> <span id="timezone" data-location="timezone">--</span></p>
+       </div>
+     </section>
+   </main>
+   <footer>
+     <p>
+       Données fournies par
+       <a href="https://open-meteo.com/" target="_blank">Open-Meteo</a>
+     </p>
+   </footer>
+ </body>
 </html>
