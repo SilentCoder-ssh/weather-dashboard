@@ -1,3 +1,3 @@
 import "virtual:uno.css";
-import "./shared/datas/data"
+import "./shared/utils/find-data";
 import "./shared/handlers/search-button";

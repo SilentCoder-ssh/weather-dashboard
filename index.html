@@ -24,7 +24,7 @@
          <button type="button" id="search-button" data-action="search">Rechercher</button>
        </div>
      </section>
-
+     <!-- Section pour les prévisions en direct -->
      <section id="current-weather" data-section="current">
        <h2>Conditions Actuelles</h2>
        <h3>
@@ -40,7 +40,7 @@
          <p>
            <strong>Conditions météorologiques:</strong>
            <span id="current-condition" data-weather="condition.text">--</span>
-           <img id="icon-condition" src="" data-weather="condition.icon" alt="icon-condition"/>
+           <img id="icon-condition" data-weather="condition.icon"/>
          </p>
 
          <!-- Températures -->
@@ -138,7 +138,7 @@
      </section>
 
      <!-- Section pour les prévisions horaires -->
-     <section id="hourly-forecast" data-section="hourly">
+<!--début du commentaire     <section id="hourly-forecast" data-section="hourly">
        <h2>Prévisions Horaires</h2>
        <table>
          <thead>
@@ -149,21 +149,105 @@
              <th>Description</th>
            </tr>
          </thead>
-         <tbody id="hourly-forecast-data" data-forecast="hourly">
+         <tbody id="hourly-forecast-data" data-forecast="hourly">  fin du commentaire-->
            <!-- Les lignes seront ajoutées dynamiquement ici -->
-         </tbody>
+ <!--début du commentaire        </tbody>
        </table>
-     </section>
+     </section> fin du commentaire--> changer data-weather avec le nom des propriété de l'objet dnas le fetch arranger la fonction et typé 
+
+     <section id="forecast-day" data-section="forecast">
+  <h2>Prévisions du Jour</h2>
+  <div class="weather-info">
+    <!-- Conditions -->
+    <p>
+      <strong>Code Météo:</strong>
+      <span id="forecast-weather-code" data-weather="condition.code">--</span>
+    </p>
+    <p>
+      <strong>Conditions météorologiques:</strong>
+      <span id="forecast-condition" data-weather="condition.text">--</span>
+      <img id="forecast-icon" src="" data-weather="condition.icon" alt="forecast-condition"/>
+    </p>
+
+    <!-- Températures --> 
+    <p>
+      <strong>Température moyenne:</strong>
+      <span id="forecast-avgtemp-c" data-weather="avgtemp_c">--</span> °C /
+      <span id="forecast-avgtemp-f" data-weather="avgtemp_f">--</span> °F
+    </p>
+    <p>
+      <strong>Température maximale:</strong>
+      <span id="forecast-maxtemp-c" data-weather="maxtemp_c">--</span> °C /
+      <span id="forecast-maxtemp-f" data-weather="maxtemp_f">--</span> °F
+    </p>
+    <p>
+      <strong>Température minimale:</strong>
+      <span id="forecast-mintemp-c" data-weather="mintemp_c">--</span> °C /
+      <span id="forecast-mintemp-f" data-weather="mintemp_f">--</span> °F
+    </p>
+
+    <!-- Précipitations -->
+    <p>
+      <strong>Précipitations totales:</strong>
+      <span id="forecast-totalprecip-mm" data-weather="totalprecip_mm">--</span> mm /
+      <span id="forecast-totalprecip-in" data-weather="totalprecip_in">--</span> in
+    </p>
+    <p>
+      <strong>Neige totale:</strong>
+      <span id="forecast-totalsnow-cm" data-weather="totalsnow_cm">--</span> cm
+    </p>
+    <p>
+      <strong>Probabilité de pluie:</strong>
+      <span id="forecast-rain-chance" data-weather="daily_chance_of_rain">--</span>%
+    </p>
+    <p>
+      <strong>Probabilité de neige:</strong>
+      <span id="forecast-snow-chance" data-weather="daily_chance_of_snow">--</span>%
+    </p>
+    <p>
+      <strong>Pluie prévue:</strong>
+      <span id="forecast-will-it-rain" data-weather="daily_will_it_rain">--</span>
+    </p>
+    <p>
+      <strong>Neige prévue:</strong>
+      <span id="forecast-will-it-snow" data-weather="daily_will_it_snow">--</span>
+    </p>
+
+    <!-- Autres mesures -->
+    <p>
+      <strong>Humidité moyenne:</strong>
+      <span id="forecast-avghumidity" data-weather="avghumidity">--</span>%
+    </p>
+    <p>
+      <strong>UV:</strong>
+      <span id="forecast-uv" data-weather="uv">--</span>
+    </p>
+
+    <!-- Vent -->
+    <p>
+      <strong>Vitesse max. du vent:</strong>
+      <span id="forecast-maxwind-kph" data-weather="maxwind_kph">--</span> km/h /
+      <span id="forecast-maxwind-mph" data-weather="maxwind_mph">--</span> mph
+    </p>
+
+    <!-- Visibilité -->
+    <p>
+      <strong>Visibilité moyenne:</strong>
+      <span id="forecast-avgvis-km" data-weather="avgvis_km">--</span> km /
+      <span id="forecast-avgvis-miles" data-weather="avgvis_miles">--</span> miles
+    </p>
+  </div>
+</section>
 
      <!-- Section pour les informations supplémentaires -->
-     <section id="additional-info" data-section="location">
+ <!-- début du commentaire    <section id="additional-info" data-section="location">
        <h2>Informations Supplémentaires</h2>
        <div>
          <p><strong>Latitude:</strong> <span id="latitude" data-location="latitude">--</span></p>
          <p><strong>Longitude:</strong> <span id="longitude" data-location="longitude">--</span></p>
          <p><strong>Fuseau Horaire:</strong> <span id="timezone" data-location="timezone">--</span></p>
        </div>
-     </section>
+     </section> fin du commentaire-->
    </main>
    <footer>
      <p>

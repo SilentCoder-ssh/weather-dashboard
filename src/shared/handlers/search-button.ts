@@ -1,4 +1,4 @@
-import { findData, locationInput } from "../datas/data";
+import { findData, locationInput } from "../utils/find-data";
 
 interface LocationData {
   country: string;
@@ -49,40 +49,106 @@ interface CurrentWeather {
   windchill_f: number;
 }
 
-type PropsCurrentWeather = keyof CurrentWeather;
+type WeatherData = CurrentWeather | DailyWeather
 
-interface WeatherData {
+type PropsWeatherData = keyof CurrentWeather | keyof DailyWeather;
+
+type WeatherForecast = {
+  forecastday: {
+    date: string;
+    day: DailyWeather;
+  }[];
+};
+
+interface WeatherCurrentData {
   location: LocationData;
   current: CurrentWeather;
+  forecast: WeatherForecast;
+}
+
+interface DailyWeather {
+  avghumidity: number;
+  avgtemp_c: number;
+  avgtemp_f: number;
+  avgvis_km: number;
+  avgvis_miles: number;
+  condition: WeatherCondition;
+  daily_chance_of_rain: number;
+  daily_chance_of_snow: number;
+  daily_will_it_rain: number;
+  daily_will_it_snow: number;
+  maxtemp_c: number;
+  maxtemp_f: number;
+  maxwind_kph: number;
+  maxwind_mph: number;
+  mintemp_c: number;
+  mintemp_f: number;
+  totalprecip_in: number;
+  totalprecip_mm: number;
+  totalsnow_cm: number;
+  uv: number;
 }
 
 const searchButton: HTMLButtonElement = document.querySelector(
   "#search-button"
 )! as HTMLButtonElement;
 
-const getDatasetWeather = (data: CurrentWeather) => {
+const getDatasetWeather = (data: CurrentWeather | DailyWeather) => {
   const elements = document.querySelectorAll<HTMLElement>("[data-weather]");
-  const weatherElements: Partial<Record<PropsCurrentWeather, HTMLElement>> = {};
+  const weatherElements: Partial<Record<PropsWeatherData, HTMLElement>> = {};
 
   Array.from(elements).forEach((element) => {
     const weatherKey = element.getAttribute("data-weather");
     if (weatherKey) {
-      weatherElements[weatherKey as PropsCurrentWeather] = element;
+      weatherElements[weatherKey as PropsWeatherData] = element;
+    }
+
+    if (weatherKey === "condition.icon") {
+      const iconElement = element as HTMLImageElement;
+      if (data?.condition?.icon) {
+        iconElement.src = data.condition.icon;
+        iconElement.alt = "icon-condition";
+      }
+    }
+
+    if (weatherKey === "condition.text") {
+      const textElement = element as HTMLSpanElement;
+      if (data?.condition?.text) {
+        textElement.textContent = data.condition.text;
+      }
+    }
+
+    if (weatherKey === "condition.code") {
+      const codeElement = element as HTMLSpanElement;
+      if (data?.condition?.code) {
+        codeElement.textContent = String(data.condition.code);
+      }
     }
   });
 
   Object.entries(weatherElements).forEach(([key, value]) => {
     if (key in data) {
-      value.textContent = `${data[key as keyof CurrentWeather]}`;
+      value.textContent = `${data[key as keyof WeatherData]}`;
     }
+    // console.log("key :", key, "value :", value);
   });
 
-  console.log("Elements mappés:", weatherElements);
+  // console.log("Elements mappés:", weatherElements);
   return weatherElements;
 };
 
 searchButton?.addEventListener("click", async (_) => {
   const cityName = locationInput.value.trim();
-  const weatherData: WeatherData = await findData(`${cityName}`);
-  getDatasetWeather(weatherData.current);
+  if(!cityName) return
+
+  const weatherCurrentData: WeatherCurrentData = await findData(
+    "current",
+    `${cityName}`
+  );
+  getDatasetWeather(weatherCurrentData.current);
+  console.log("current data : ", weatherCurrentData);
+
+  const weatherDailyData = await findData("forecast", `${cityName}`);
+  getDatasetWeather(weatherDailyData.forecast.forecastday[0].day);
+  console.log("Daily data : ", weatherDailyData);
 });
