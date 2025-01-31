@@ -49,14 +49,18 @@ interface CurrentWeather {
   windchill_f: number;
 }
 
-type WeatherData = CurrentWeather | DailyWeather
+type WeatherData = CurrentWeather | DailyWeather | HourlyWeather;
 
-type PropsWeatherData = keyof CurrentWeather | keyof DailyWeather;
+type PropsWeatherData =
+  | keyof CurrentWeather
+  | keyof DailyWeather
+  | keyof HourlyWeather;
 
 type WeatherForecast = {
   forecastday: {
     date: string;
     day: DailyWeather;
+    hourly: HourlyWeather[];
   }[];
 };
 
@@ -89,11 +93,29 @@ interface DailyWeather {
   uv: number;
 }
 
+interface HourlyWeather {
+  time: string;
+  time_epoch: number;
+  temp_c: number;
+  temp_f: number;
+  condition: WeatherCondition;
+  is_day: number;
+  chance_of_rain: number;
+  chance_of_snow: number;
+  wind_kph: number;
+  wind_dir: string;
+  humidity: number;
+  feelslike_c: number;
+  feelslike_f: number;
+  precip_mm: number;
+  uv: number;
+}
+
 const searchButton: HTMLButtonElement = document.querySelector(
   "#search-button"
 )! as HTMLButtonElement;
 
-const getDatasetWeather = (data: CurrentWeather | DailyWeather) => {
+const getDatasetWeather = (data: WeatherData) => {
   const elements = document.querySelectorAll<HTMLElement>("[data-weather]");
   const weatherElements: Partial<Record<PropsWeatherData, HTMLElement>> = {};
 
@@ -130,25 +152,73 @@ const getDatasetWeather = (data: CurrentWeather | DailyWeather) => {
     if (key in data) {
       value.textContent = `${data[key as keyof WeatherData]}`;
     }
-    // console.log("key :", key, "value :", value);
   });
-
-  // console.log("Elements mappés:", weatherElements);
   return weatherElements;
 };
 
+const createTbodyHTML = (hourlyData: HourlyWeather[]) => {
+  const tbody = document.querySelector("#hourly-forecast-data")!;
+  tbody.textContent = "";
+
+  hourlyData.forEach((hour) => {
+    const row = document.createElement("tr");
+    row.id = "hourly-row";
+
+    row.innerHTML = `
+    <td class="time">
+        <span class="time-text">${hour.time}</span>
+      </td>
+      <td class="temperature">
+        <span class="temp-c">${hour.temp_c}°C</span>
+        <span class="temp-f">${hour.temp_f}°F</span>
+      </td>
+      <td class="condition">
+        <img src="${hour.condition.icon}" alt="${hour.condition.text}" class="weather-icon">
+        <span class="condition-text">${hour.condition.text}</span>
+      </td>
+      <td class="precipitation">
+        <span class="chance-of-rain">Rain: ${hour.chance_of_rain}%</span>
+        <span class="chance-of-snow">Snow: ${hour.chance_of_snow}%</span>
+      </td>
+      <td class="wind">
+        <span class="wind-speed">${hour.wind_kph} km/h</span>
+        <span class="wind-direction">${hour.wind_dir}</span>
+      </td>
+      <td class="humidity">
+        <span class="humidity-value">${hour.humidity}%</span>
+      </td>
+      <td class="feels-like">
+        <span class="feels-like-c">${hour.feelslike_c}°C</span>
+        <span class="feels-like-f">${hour.feelslike_f}°F</span>
+      </td>
+      <td class="uv">
+        <span class="uv-index">${hour.uv}</span>
+    </td>
+  `;
+    tbody.appendChild(row);
+  });
+};
+
 searchButton?.addEventListener("click", async (_) => {
-  const cityName = locationInput.value.trim();
-  if(!cityName) return
+  try {
+    const cityName = locationInput.value.trim();
+    if (!cityName) return;
 
-  const weatherCurrentData: WeatherCurrentData = await findData(
-    "current",
-    `${cityName}`
-  );
-  getDatasetWeather(weatherCurrentData.current);
-  console.log("current data : ", weatherCurrentData);
+    const weatherCurrentData: WeatherCurrentData = await findData(
+      "current",
+      `${cityName}`
+    );
+    getDatasetWeather(weatherCurrentData.current);
+    console.log("current data : ", weatherCurrentData);
 
-  const weatherDailyData = await findData("forecast", `${cityName}`);
-  getDatasetWeather(weatherDailyData.forecast.forecastday[0].day);
-  console.log("Daily data : ", weatherDailyData);
+    const weatherDailyData = await findData("forecast", `${cityName}`);
+    getDatasetWeather(weatherDailyData.forecast.forecastday[0].day);
+    console.log("Daily data : ", weatherDailyData);
+
+    const weatherHourlyData = await findData("forecast", `${cityName}`);
+    const hourlyData = weatherHourlyData.forecast.forecastday[0].hour;
+    createTbodyHTML(hourlyData);
+  } catch (error) {
+    console.error("Erreur de fetch des datas : ", error);
+  }
 });

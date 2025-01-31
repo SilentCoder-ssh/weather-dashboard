@@ -17,7 +17,7 @@ export async function findData(Time: string, cityName: string): Promise<any> {
     }
 
     data = await response.json();
-    console.log("Données reçues : ", data);
+    //console.log("Données reçues : ", data);
   } catch (error) {
     console.error("Erreur lors de la récupération des données : ", error);
     throw error;
