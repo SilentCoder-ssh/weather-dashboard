@@ -1,5 +1,10 @@
 import { defineConfig } from 'unocss';
 
 export default defineConfig({
-    //...UnoCSS options
-})
+  safelist: [
+    "text-green-5",
+    "text-red-5",
+    // Ajoutez ici toutes les classes que vous utilisez dynamiquement
+  ],
+  //...UnoCSS options
+});

@@ -115,6 +115,14 @@ const searchButton: HTMLButtonElement = document.querySelector(
   "#search-button"
 )! as HTMLButtonElement;
 
+const titleInput: HTMLParagraphElement = document.querySelector(
+  "#title-input"
+)! as HTMLParagraphElement;
+
+const tbody = document.querySelector(
+  "#hourly-forecast-data"
+)! as HTMLTableElement;
+
 const getDatasetWeather = (data: WeatherData) => {
   const elements = document.querySelectorAll<HTMLElement>("[data-weather]");
   const weatherElements: Partial<Record<PropsWeatherData, HTMLElement>> = {};
@@ -130,6 +138,9 @@ const getDatasetWeather = (data: WeatherData) => {
       if (data?.condition?.icon) {
         iconElement.src = data.condition.icon;
         iconElement.alt = "icon-condition";
+        iconElement.classList.add("w-8")
+        iconElement.classList.add("h-8");
+        iconElement.classList.add("ml-2");
       }
     }
 
@@ -157,7 +168,6 @@ const getDatasetWeather = (data: WeatherData) => {
 };
 
 const createTbodyHTML = (hourlyData: HourlyWeather[]) => {
-  const tbody = document.querySelector("#hourly-forecast-data")!;
   tbody.textContent = "";
 
   hourlyData.forEach((hour) => {
@@ -165,36 +175,39 @@ const createTbodyHTML = (hourlyData: HourlyWeather[]) => {
     row.id = "hourly-row";
 
     row.innerHTML = `
-    <td class="time">
-        <span class="time-text">${hour.time}</span>
-      </td>
-      <td class="temperature">
-        <span class="temp-c">${hour.temp_c}°C</span>
-        <span class="temp-f">${hour.temp_f}°F</span>
-      </td>
-      <td class="condition">
-        <img src="${hour.condition.icon}" alt="${hour.condition.text}" class="weather-icon">
-        <span class="condition-text">${hour.condition.text}</span>
-      </td>
-      <td class="precipitation">
-        <span class="chance-of-rain">Rain: ${hour.chance_of_rain}%</span>
-        <span class="chance-of-snow">Snow: ${hour.chance_of_snow}%</span>
-      </td>
-      <td class="wind">
-        <span class="wind-speed">${hour.wind_kph} km/h</span>
-        <span class="wind-direction">${hour.wind_dir}</span>
-      </td>
-      <td class="humidity">
-        <span class="humidity-value">${hour.humidity}%</span>
-      </td>
-      <td class="feels-like">
-        <span class="feels-like-c">${hour.feelslike_c}°C</span>
-        <span class="feels-like-f">${hour.feelslike_f}°F</span>
-      </td>
-      <td class="uv">
-        <span class="uv-index">${hour.uv}</span>
+    <td class="time p-3 border border-gray-600 text-center">
+        <span class="time-text font-semibold text-blue-300">${hour.time}</span>
     </td>
-  `;
+    <td class="temperature p-3 border border-gray-600 text-center">
+        <span class="temp-c block text-lg text-white">${hour.temp_c}°C</span>
+        <span class="temp-f text-sm text-gray-400">${hour.temp_f}°F</span>
+    </td>
+    <td class="condition p-3 border border-gray-600 flex items-center justify-center">
+        <img src="${hour.condition.icon}" alt="${hour.condition.text}" class="weather-icon w-8 h-8 mr-2">
+        <span class="condition-text text-white">${hour.condition.text}</span>
+    </td>
+    <td class="precipitation p-3 border border-gray-600 text-center">
+        <span class="chance-of-rain block text-blue-400">Rain: ${hour.chance_of_rain}%</span>
+        <span class="chance-of-snow text-gray-400">Snow: ${hour.chance_of_snow}%</span>
+    </td>
+    <td class="wind p-3 border border-gray-600 text-center">
+        <span class="wind-speed block text-white">${hour.wind_kph} km/h</span>
+        <span class="wind-direction text-gray-400">${hour.wind_dir}</span>
+    </td>
+    <td class="humidity p-3 border border-gray-600 text-center">
+        <span class="humidity-value text-blue-300 font-semibold">${hour.humidity}%</span>
+    </td>
+    <td class="feels-like p-3 border border-gray-600 text-center">
+        <span class="feels-like-c block text-lg text-white">${hour.feelslike_c}°C</span>
+        <span class="feels-like-f text-sm text-gray-400">${hour.feelslike_f}°F</span>
+    </td>
+    <td class="uv p-3 border border-gray-600 text-center">
+        <span class="uv-index text-white font-semibold">${hour.precip_mm} mm</span>
+    </td>
+    <td class="uv p-3 border border-gray-600 text-center">
+        <span class="uv-index text-white font-semibold">${hour.uv}</span>
+    </td>
+`;
     tbody.appendChild(row);
   });
 };
@@ -202,7 +215,10 @@ const createTbodyHTML = (hourlyData: HourlyWeather[]) => {
 searchButton?.addEventListener("click", async (_) => {
   try {
     const cityName = locationInput.value.trim();
-    if (!cityName) return;
+    if (!cityName) {
+      locationInput.classList.add("");
+      return;
+    }
 
     const weatherCurrentData: WeatherCurrentData = await findData(
       "current",
@@ -213,12 +229,17 @@ searchButton?.addEventListener("click", async (_) => {
 
     const weatherDailyData = await findData("forecast", `${cityName}`);
     getDatasetWeather(weatherDailyData.forecast.forecastday[0].day);
-    console.log("Daily data : ", weatherDailyData);
 
     const weatherHourlyData = await findData("forecast", `${cityName}`);
     const hourlyData = weatherHourlyData.forecast.forecastday[0].hour;
     createTbodyHTML(hourlyData);
+
+    titleInput.classList.add("text-green-5");
+    if (titleInput.classList.contains("text-red-5")) {
+      titleInput.classList.replace("text-red-5", "title-green-5");
+    }
   } catch (error) {
     console.error("Erreur de fetch des datas : ", error);
+    titleInput.classList.add("text-red-5");
   }
 });

@@ -16,7 +16,10 @@ export async function findData(Time: string, cityName: string): Promise<any> {
       throw new Error(`Erreur HTTP: ${response.status}`);
     }
 
-    data = await response.json();
+    
+    
+
+      data = await response.json();
     //console.log("Données reçues : ", data);
   } catch (error) {
     console.error("Erreur lors de la récupération des données : ", error);
