@@ -44,50 +44,53 @@
 
 <body class="bg-blue-950 text-white">
 
-<header class="text-center p-6 bg-gray-800 shadow-lg w-full h-14 flex fixed justify-between items-center z-50">
+<header class="text-center p-6 bg-gray-800 shadow-lg w-full h-4 flex fixed justify-between items-center z-50">
 
-  <div id="main-container-header" class="w-97% flex justify-around items-center">
+  <div id="main-container-header" class="w-97% flex justify-between items-center">
     <!-- Logo et titre  -->
-    <div id="container-label" class="flex items-center">
-      <img src="/src/shared/style/icon/terre.png" alt="icon" class="w-11 h-11 mr-4 filter invert">     
-      <div id="text-label" class="text-left w-76">
-        <h1 class="text-5 font-bold">Dashboard Météo</h1>
-        <p id="p-header" class="text-3 opacity-80">Informations météorologiques en temps réel</p>
-      </div>
+    <div id="container-label" class="flex flex-col items-center ">
+        <div id="container-logo" class="flex w-62">
+              <img src="/src/shared/style/icon/terre.png" alt="icon" class="w-7 h-7 mr-4 filter invert">     
+          <div id="text-label" class="text-left w-76 pl-2">
+              <h1 class="text-5 font-bold">Dashboard Météo</h1>
+          </div>
+        </div>
+      <p id="p-header" class="text-3 opacity-80">Informations météorologiques en temps réel</p>
     </div>
 
     <!-- Section recherche  -->
-    <div class="flex items-center flex-1 mx-8">
-      <h2 id="title-input" class="text-xl font-semibold mb-2">Rechercher une Localisation</h2>
-      <div class="flex gap-4 w-full max-w-2xl">
-        <input
-          type="text"
-          id="location-input"
-          placeholder="Entrez une ville..."
-          data-search="location"
-          class="flex-1 p-2 border-none rounded-lg border-gray-600 bg-[rgba(2,2,2,0.484)] outline-none text-white focus:ring focus:ring-blue-500 text-base"
-        />
-        <button 
-          type="button" 
-          id="search-button" 
-          data-action="search"
-          class="px-6 py-2 bg-[rgba(2,2,2,0.484)] hover:bg-blue-800 hover:saturate-150 text-base border-none text-white rounded-lg cursor-pointer"
-        >
-          Rechercher
-        </button>
-      </div>
-    </div>
+<div class="flex justify-center items-center fixed left-35%">
+  <h2 id="title-input" class="text-xl font-semibold mb-2">Localisation</h2>
+  <div class="flex gap-4 w-full max-w-2xl px-3">
+    <input
+      type="text"
+      id="location-input"
+      placeholder="Entrez une ville..."
+      data-search="location"
+      class="flex-1 p-2 bg-[rgba(2,2,2,0.484)] outline-none text-white focus:ring focus:ring-blue-500 text-base rounded-lg"
+    />
+    <button 
+      type="button" 
+      id="search-button" 
+      data-action="search"
+      class="px-3 py-1.5 bg-[rgba(2,2,2,0.484)] hover:bg-blue-800 hover:saturate-150 text-base text-white rounded-lg"
+    >
+      Rechercher
+    </button>
+  </div>
+</div>
+
 
     <!-- Horloge -->
     <span id="date-live">
       <div>
-        <span id="clock">--:--:--</span>
+        <span id="clock" class="text-7">--:--:--</span>
       </div>
     </span>
   </div>
 </header>
 
-<nav class="bg-gray-800 fixed h-full top-0 left-0 w-20 flex justify-center py-4">
+<nav class="bg-gray-800 fixed h-full top-0 left-0 w-20 flex justify-center py-4 shadow-lg z-40">
   <div class="flex flex-col items-center justify-center space-y-12 h-full">
     <!-- Conditions Actuelles -->
     <a id="current-conditions-nav" class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center">
@@ -319,7 +322,7 @@
     </main>
 </div>
 
- <footer class="bg-gray-800 p-4 text-center text-white mt-6 rounded-lg shadow-lg fixed bottom-0 w-full h-4.35">
+ <footer class="bg-gray-800 flex justify-center items-center p-4 text-center text-white mt-6 rounded-lg shadow-lg fixed bottom-0 w-full h-2">
       <p class="text-xm opacity-80">
         Données fournies par 
         <a href="https://open-meteo.com/" target="_blank" class="text-blue-400 hover:underline text-xm">Open-Meteo</a>
