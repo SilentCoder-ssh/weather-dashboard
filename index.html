@@ -1,331 +1,757 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="/src/main.ts" defer></script>
     <title>Dashboard Météo</title>
     <style>
-        * {
+      * {
         margin: 0;
         padding: 0;
-        }
+      }
 
-        @font-face {
-            font-family: 'Montserrat Alternates';
-            src: url('src/shared/style/font/MontserratAlternates-Regular.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-        @font-face {
-            font-family: 'Source Code Pro';
-            src: url('src/shared/style/font/SourceCodePro-Regular.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
+      @font-face {
+        font-family: "Montserrat Alternates";
+        src: url("src/shared/style/font/MontserratAlternates-Regular.ttf")
+          format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: "Source Code Pro";
+        src: url("src/shared/style/font/SourceCodePro-Regular.ttf")
+          format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
 
-        h1, nav, #p-header, h2, button, #clock, footer  {
-            font-family: 'Montserrat Alternates', serif;
-        }
+      h1,
+      nav,
+      #p-header,
+      h2,
+      button,
+      #clock,
+      footer {
+        font-family: "Montserrat Alternates", serif;
+      }
 
-        body{
-            font-family: 'Source Code Pro', serif;
-        }
+      body {
+        font-family: "Source Code Pro", serif;
+      }
 
-        tr:nth-child(odd) {
-            background-color: rgba(2, 2, 2, 0.484) !important;
-        }
+      tr:nth-child(odd) {
+        background-color: rgba(2, 2, 2, 0.484) !important;
+      }
 
-        #text-label {
-            border-left: solid 2px white 
-        }
-    </style> 
-</head>
+      #text-label {
+        border-left: solid 2px white;
+      }
+    </style>
+  </head>
 
-<body class="bg-blue-950 text-white">
-
-<header class="text-center p-6 bg-gray-800 shadow-lg w-full h-4 flex fixed justify-between items-center z-50">
-
-  <div id="main-container-header" class="w-97% flex justify-between items-center">
-    <!-- Logo et titre  -->
-    <div id="container-label" class="flex flex-col items-center ">
-        <div id="container-logo" class="flex w-62">
-              <img src="/src/shared/style/icon/terre.png" alt="icon" class="w-7 h-7 mr-4 filter invert">     
-          <div id="text-label" class="text-left w-76 pl-2">
+  <body class="bg-blue-950 text-white">
+    <header
+      class="text-center p-6 bg-gray-800 shadow-lg w-full h-4 flex fixed justify-between items-center z-50"
+    >
+      <div
+        id="container-header"
+        class="w-97% flex justify-between items-center"
+      >
+        <!-- Logo et titre  -->
+        <div id="container-label" class="flex flex-col items-center">
+          <div id="container-logo" class="flex w-62 pb-0.8">
+            <img
+              src="/src/shared/style/icon/terre.png"
+              alt="icon"
+              class="w-6 h-6 mr-3 filter invert"
+            />
+            <div id="text-label" class="text-left w-76 pl-3">
               <h1 class="text-5 font-bold">Dashboard Météo</h1>
+            </div>
+          </div>
+          <p id="p-header" class="text-3 opacity-80">
+            Informations météorologiques en temps réel
+          </p>
+        </div>
+
+        <!-- Section recherche  -->
+        <div
+          class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center items-center"
+        >
+          <svg
+            id="svg-location"
+            class="w-5 h-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              d="M12 2C8.134 2 5 5.134 5 9c0 3.865 4 10 7 13 3-3 7-9.135 7-13 0-3.866-3.134-7-7-7zm0 11c-1.104 0-2-1.12-2-2s.896-2 2-2 2 1.12 2 2-.896 2-2 2z"
+            />
+          </svg>
+
+          <div class="flex gap-4 w-full max-w-2xl px-3">
+            <input
+              type="text"
+              id="location-input"
+              placeholder="Entrez une ville..."
+              data-search="location"
+              class="flex-1 p-2 bg-[rgba(2,2,2,0.484)] border-none outline-none text-white focus:ring focus:ring-blue-500 focus:bg-[rgba(2,2,2,0.484)] text-base rounded-lg"
+            />
+            <button
+              type="button"
+              id="search-button"
+              data-action="search"
+              class="px-3 py-1.5 bg-[rgba(2,2,2,0.484)] hover:bg-blue-800 hover:saturate-150 text-base text-white rounded-lg"
+            >
+              Rechercher
+            </button>
           </div>
         </div>
-      <p id="p-header" class="text-3 opacity-80">Informations météorologiques en temps réel</p>
-    </div>
 
-    <!-- Section recherche  -->
-<div class="flex justify-center items-center fixed left-35%">
-  <h2 id="title-input" class="text-xl font-semibold mb-2">Localisation</h2>
-  <div class="flex gap-4 w-full max-w-2xl px-3">
-    <input
-      type="text"
-      id="location-input"
-      placeholder="Entrez une ville..."
-      data-search="location"
-      class="flex-1 p-2 bg-[rgba(2,2,2,0.484)] outline-none text-white focus:ring focus:ring-blue-500 text-base rounded-lg"
-    />
-    <button 
-      type="button" 
-      id="search-button" 
-      data-action="search"
-      class="px-3 py-1.5 bg-[rgba(2,2,2,0.484)] hover:bg-blue-800 hover:saturate-150 text-base text-white rounded-lg"
-    >
-      Rechercher
-    </button>
-  </div>
-</div>
-
-
-    <!-- Horloge -->
-    <span id="date-live">
-      <div>
-        <span id="clock" class="text-7">--:--:--</span>
+        <!-- Horloge -->
+        <span id="date-live">
+          <div>
+            <span id="clock" class="text-7">...</span>
+          </div>
+        </span>
       </div>
-    </span>
-  </div>
-</header>
+    </header>
 
-<nav class="bg-gray-800 fixed h-full top-0 left-0 w-20 flex justify-center py-4 shadow-lg z-40">
-  <div class="flex flex-col items-center justify-center space-y-12 h-full">
-    <!-- Conditions Actuelles -->
-    <a id="current-conditions-nav" class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg>
-      <span class="text-sm mt-1">Actuelles</span>
-    </a>
+    <nav
+      class="bg-gray-800 fixed h-full top-0 left-0 w-20 flex justify-center py-4 shadow-lg z-40"
+    >
+      <div class="flex flex-col items-center justify-center space-y-12 h-full">
+        <!-- Conditions Actuelles -->
+        <a
+          id="current-conditions-nav"
+          class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          <span class="text-sm mt-1">Actuelles</span>
+        </a>
 
-    <!-- Horaires -->
-    <a id="hourly-forecast-nav" class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <span class="text-sm mt-1">Horaires</span>
-    </a>
+        <!-- Horaires -->
+        <a
+          id="hourly-forecast-nav"
+          class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span class="text-sm mt-1">Horaires</span>
+        </a>
 
-    <!-- Demain -->
-    <a id="tomorrow-forecast-nav" class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-      </svg>
-      <span class="text-sm mt-1">Demain</span>
-    </a>
-  </div>
-</nav>
+        <!-- Demain -->
+        <a
+          id="tomorrow-forecast-nav"
+          class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            />
+          </svg>
+          <span class="text-sm mt-1">Demain</span>
+        </a>
+      </div>
+    </nav>
 
-<div id="main-container" class="hidden">
-    <main class="p-6 bg-red flex flex-col items-center">
-            <!-- Section pour les prévisions en direct -->
-      <section id="current-weather" data-section="current" class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6">
-        <h2 class="text-2xl font-semibold flex justify-between items-center">Conditions Actuelles
-        </h2>
-        <h3 class="text-sm opacity-80 mt-2">
-          (Date des dernières données :
-          <span id="last-updated" data-weather="last_updated" class="text-sm text-blue-400">--</span>) 
-        </h3>
-        <div class="weather-info grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-          <!-- Conditions -->
-          <p class="flex items-center">
-            <strong class="text-base">Code Météo:</strong>
-            <span id="current-weather-code" data-weather="condition.code" class="ml-2 text-blue-300">--</span>
-          </p>
-          <p class="flex items-center">
-            <strong class="text-base">Conditions météorologiques:</strong>
-            <span id="current-condition" data-weather="condition.text" class="ml-2 text-blue-300">--</span>
-            <img id="icon-condition" data-weather="condition.icon" />
-          </p>
+    <nav
+      class="bg-gray-800 fixed h-full top-0 right-0 w-20 flex justify-center py-4 shadow-lg z-40"
+    >
+      <div class="flex flex-col items-center justify-center space-y-12 h-full">
+        <!-- Filtre 1 -->
+        <a
+          id="filtre-1"
+          class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center"
+        >
+          <span class="text-sm mt-1">Filtre 1</span>
+        </a>
 
-          <!-- Températures -->
-          <p><strong class="text-base">Température:</strong> 
-            <span id="current-temperature-c" data-weather="temp_c" class="text-blue-300">--</span> °C / 
-            <span id="current-temperature-f" data-weather="temp_f" class="text-blue-300">--</span> °F
-          </p>
-          <p><strong class="text-base">Température ressentie:</strong> 
-            <span id="current-temperature-feel-c" data-weather="feelslike_c" class="text-blue-300">--</span> °C / 
-            <span id="current-temperature-feel-f" data-weather="feelslike_f" class="text-blue-300">--</span> °F
-          </p>
+        <!-- Filtre 2 -->
+        <a
+          id="filtre-2"
+          class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center"
+        >
+          <span class="text-sm mt-1">Filtre 2</span>
+        </a>
 
-          <!-- Point de rosée -->
-          <p><strong class="text-base">Point de rosée:</strong> 
-            <span id="dewpoint-c" data-weather="dewpoint_c" class="text-blue-300">--</span> °C / 
-            <span id="dewpoint-f" data-weather="dewpoint_f" class="text-blue-300">--</span> °F
-          </p>
+        <!-- Filtre 3 -->
+        <a
+          id="filtre-3"
+          class="cursor-pointer text-white hover:text-gray-200 flex flex-col items-center"
+        >
+          <span class="text-sm mt-1">Filtre 3</span>
+        </a>
+      </div>
+    </nav>
 
-          <!-- Index de chaleur -->
-          <p><strong class="text-base">Index de chaleur:</strong> 
-            <span id="heatindex-c" data-weather="heatindex_c" class="text-blue-300">--</span> °C / 
-            <span id="heatindex-f" data-weather="heatindex_f" class="text-blue-300">--</span> °F
-          </p>
+    <main class="p-6 flex flex-col items-center">
+      <div id="main-container" class="">
+        <!-- Section pour les prévisions en direct -->
+        <section
+          id="current-weather"
+          data-section="current"
+          class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6"
+        >
+          <h2 class="text-2xl font-semibold flex justify-between items-center">
+            Conditions Actuelles
+          </h2>
+          <h3 class="text-sm opacity-80 mt-2">
+            (Date des dernières données :
+            <span
+              id="last-updated"
+              data-weather="last_updated"
+              class="text-sm text-blue-400"
+              >--</span
+            >)
+          </h3>
+          <div
+            class="weather-info grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
+          >
+            <!-- Conditions -->
+            <p class="flex items-center">
+              <strong class="text-base">Code Météo:</strong>
+              <span
+                id="current-weather-code"
+                data-weather="condition.code"
+                class="ml-2 text-blue-300"
+                >--</span
+              >
+            </p>
+            <p class="flex items-center">
+              <strong class="text-base">Conditions météorologiques:</strong>
+              <span
+                id="current-condition"
+                data-weather="condition.text"
+                class="ml-2 text-blue-300"
+                >--</span
+              >
+              <img id="icon-condition" data-weather="condition.icon" />
+            </p>
 
-          <!-- Refroidissement éolien -->
-          <p><strong class="text-base">Refroidissement éolien:</strong> 
-            <span id="windchill-c" data-weather="windchill_c" class="text-blue-300">--</span> °C / 
-            <span id="windchill-f" data-weather="windchill_f" class="text-blue-300">--</span> °F
-          </p>
+            <!-- Températures -->
+            <p>
+              <strong class="text-base">Température:</strong>
+              <span
+                id="current-temperature-c"
+                data-weather="temp_c"
+                class="text-blue-300"
+                >--</span
+              >
+              °C /
+              <span
+                id="current-temperature-f"
+                data-weather="temp_f"
+                class="text-blue-300"
+                >--</span
+              >
+              °F
+            </p>
+            <p>
+              <strong class="text-base">Température ressentie:</strong>
+              <span
+                id="current-temperature-feel-c"
+                data-weather="feelslike_c"
+                class="text-blue-300"
+                >--</span
+              >
+              °C /
+              <span
+                id="current-temperature-feel-f"
+                data-weather="feelslike_f"
+                class="text-blue-300"
+                >--</span
+              >
+              °F
+            </p>
 
-          <!-- Autres mesures -->
-          <p><strong class="text-base">Humidité:</strong> 
-            <span id="humidity" data-weather="humidity" class="text-blue-300">--</span>%
-          </p>
-          <p><strong class="text-base">Cloud:</strong> 
-            <span id="current-weather-cloud" data-weather="cloud" class="text-blue-300">--</span>%
-          </p>
-          <p><strong class="text-base">UV:</strong> 
-            <span id="uv-index" data-weather="uv" class="text-blue-300">--</span>
-          </p>
-          <p><strong class="text-base">Est-ce le jour:</strong> 
-            <span id="is-day" data-weather="is_day" class="text-blue-300">--</span>
-          </p>
+            <!-- Point de rosée -->
+            <p>
+              <strong class="text-base">Point de rosée:</strong>
+              <span
+                id="dewpoint-c"
+                data-weather="dewpoint_c"
+                class="text-blue-300"
+                >--</span
+              >
+              °C /
+              <span
+                id="dewpoint-f"
+                data-weather="dewpoint_f"
+                class="text-blue-300"
+                >--</span
+              >
+              °F
+            </p>
 
-          <!-- Vent -->
-          <p><strong class="text-base">Vitesse du vent:</strong> 
-            <span id="wind-kph" data-weather="wind_kph" class="text-blue-300">--</span> km/h / 
-            <span id="wind-mph" data-weather="wind_mph" class="text-blue-300">--</span> mph
-          </p>
-          <p><strong class="text-base">Rafales:</strong> 
-            <span id="gust-kph" data-weather="gust_kph" class="text-blue-300">--</span> km/h / 
-            <span id="gust-mph" data-weather="gust_mph" class="text-blue-300">--</span> mph
-          </p>
-          <p><strong class="text-base">Direction du vent:</strong> 
-            <span id="wind-dir" data-weather="wind_dir" class="text-blue-300">--</span>
-          </p>
-          <p><strong class="text-base">Direction du vent (degrés):</strong> 
-            <span id="wind-degree" data-weather="wind_degree" class="text-blue-300">--</span>°
-          </p>
+            <!-- Index de chaleur -->
+            <p>
+              <strong class="text-base">Index de chaleur:</strong>
+              <span
+                id="heatindex-c"
+                data-weather="heatindex_c"
+                class="text-blue-300"
+                >--</span
+              >
+              °C /
+              <span
+                id="heatindex-f"
+                data-weather="heatindex_f"
+                class="text-blue-300"
+                >--</span
+              >
+              °F
+            </p>
 
-          <!-- Précipitations -->
-          <p><strong class="text-base">Précipitations:</strong> 
-            <span id="precip-mm" data-weather="precip_mm" class="text-blue-300">--</span> mm / 
-            <span id="precip-in" data-weather="precip_in" class="text-blue-300">--</span> in
-          </p>
+            <!-- Refroidissement éolien -->
+            <p>
+              <strong class="text-base">Refroidissement éolien:</strong>
+              <span
+                id="windchill-c"
+                data-weather="windchill_c"
+                class="text-blue-300"
+                >--</span
+              >
+              °C /
+              <span
+                id="windchill-f"
+                data-weather="windchill_f"
+                class="text-blue-300"
+                >--</span
+              >
+              °F
+            </p>
 
-          <!-- Pression -->
-          <p><strong class="text-base">Pression:</strong> 
-            <span id="pressure-mb" data-weather="pressure_mb" class="text-blue-300">--</span> mb / 
-            <span id="pressure-in" data-weather="pressure_in" class="text-blue-300">--</span> in
-          </p>
+            <!-- Autres mesures -->
+            <p>
+              <strong class="text-base">Humidité:</strong>
+              <span id="humidity" data-weather="humidity" class="text-blue-300"
+                >--</span
+              >%
+            </p>
+            <p>
+              <strong class="text-base">Cloud:</strong>
+              <span
+                id="current-weather-cloud"
+                data-weather="cloud"
+                class="text-blue-300"
+                >--</span
+              >%
+            </p>
+            <p>
+              <strong class="text-base">UV:</strong>
+              <span id="uv-index" data-weather="uv" class="text-blue-300"
+                >--</span
+              >
+            </p>
+            <p>
+              <strong class="text-base">Est-ce le jour:</strong>
+              <span id="is-day" data-weather="is_day" class="text-blue-300"
+                >--</span
+              >
+            </p>
 
-          <!-- Visibilité -->
-          <p><strong class="text-base">Visibilité:</strong> 
-            <span id="vis-km" data-weather="vis_km" class="text-blue-300">--</span> km / 
-            <span id="vis-miles" data-weather="vis_miles" class="text-blue-300">--</span> miles
-          </p>
-        </div>
-      </section>
+            <!-- Vent -->
+            <p>
+              <strong class="text-base">Vitesse du vent:</strong>
+              <span id="wind-kph" data-weather="wind_kph" class="text-blue-300"
+                >--</span
+              >
+              km/h /
+              <span id="wind-mph" data-weather="wind_mph" class="text-blue-300"
+                >--</span
+              >
+              mph
+            </p>
+            <p>
+              <strong class="text-base">Rafales:</strong>
+              <span id="gust-kph" data-weather="gust_kph" class="text-blue-300"
+                >--</span
+              >
+              km/h /
+              <span id="gust-mph" data-weather="gust_mph" class="text-blue-300"
+                >--</span
+              >
+              mph
+            </p>
+            <p>
+              <strong class="text-base">Direction du vent:</strong>
+              <span id="wind-dir" data-weather="wind_dir" class="text-blue-300"
+                >--</span
+              >
+            </p>
+            <p>
+              <strong class="text-base">Direction du vent (degrés):</strong>
+              <span
+                id="wind-degree"
+                data-weather="wind_degree"
+                class="text-blue-300"
+                >--</span
+              >°
+            </p>
 
+            <!-- Précipitations -->
+            <p>
+              <strong class="text-base">Précipitations:</strong>
+              <span
+                id="precip-mm"
+                data-weather="precip_mm"
+                class="text-blue-300"
+                >--</span
+              >
+              mm /
+              <span
+                id="precip-in"
+                data-weather="precip_in"
+                class="text-blue-300"
+                >--</span
+              >
+              in
+            </p>
 
-      <!-- Section pour les prévisions horaires -->
-      <section id="hourly-forecast" data-section="hourly" class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6">
-  <h2 class="text-2xl font-semibold">Prévisions par tranche horaire de la journée</h2>
-  <table class="w-full mt-4 border-collapse border border-gray-600">
-    <thead class="bg-gray-700 text-white">
-      <tr class="border-b border-gray-600">
-        <th class="p-3 border-r border-gray-300 text-center">Heure</th>
-        <th class="p-3 border-r border-gray-300 text-center">Température</th>
-        <th class="p-3 border-r border-gray-300 text-center">Temps</th>
-        <th class="p-3 border-r border-gray-300 text-center">Pluie/Neige</th>
-        <th class="p-3 border-r border-gray-300 text-center">Vent</th>
-        <th class="p-3 border-r border-gray-300 text-center">Humidité</th>
-        <th class="p-3 border-r border-gray-300 text-center">Température ressentie</th>
-        <th class="p-3 border-r border-gray-300 text-center">Précipitations</th>
-        <th class="p-3 text-center">UV</th>
-      </tr>
-    </thead>
+            <!-- Pression -->
+            <p>
+              <strong class="text-base">Pression:</strong>
+              <span
+                id="pressure-mb"
+                data-weather="pressure_mb"
+                class="text-blue-300"
+                >--</span
+              >
+              mb /
+              <span
+                id="pressure-in"
+                data-weather="pressure_in"
+                class="text-blue-300"
+                >--</span
+              >
+              in
+            </p>
 
-    <tbody id="hourly-forecast-data" data-forecast="hourly" class="bg-gray-900 text-white">
-      <!-- Les lignes seront ajoutées dynamiquement ici -->
-    </tbody>
-  </table>
-</section>
+            <!-- Visibilité -->
+            <p>
+              <strong class="text-base">Visibilité:</strong>
+              <span id="vis-km" data-weather="vis_km" class="text-blue-300"
+                >--</span
+              >
+              km /
+              <span
+                id="vis-miles"
+                data-weather="vis_miles"
+                class="text-blue-300"
+                >--</span
+              >
+              miles
+            </p>
+          </div>
+        </section>
 
-           <!-- Section pour les prévisions de demain -->
-      <section id="forecast-day" data-section="forecast" class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6">
-        <h2 class="text-2xl font-semibold">Prévisions de demain</h2>
-        <div class="weather-info grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-          <!-- Conditions -->
-          <p class="flex items-center">
-            <strong class="text-base">Code Météo:</strong>
-            <span id="forecast-weather-code" data-weather="condition.code" class="ml-2 text-blue-300">--</span>
-          </p>
-          <p class="flex items-center">
-            <strong class="text-base">Conditions météorologiques:</strong>
-            <span id="forecast-condition" data-weather="condition.text" class="ml-2 text-blue-300">--</span>
-            <img id="forecast-icon" data-weather="condition.icon" class="w-8 h-8 ml-2" />
-          </p>
+        <!-- Section pour les prévisions horaires -->
+        <section
+          id="hourly-forecast"
+          data-section="hourly"
+          class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6"
+        >
+          <h2 class="text-2xl font-semibold">
+            Prévisions par tranche horaire de la journée
+          </h2>
+          <table class="w-full mt-4 border-collapse border border-gray-600">
+            <thead class="bg-gray-700 text-white">
+              <tr class="border-b border-gray-600">
+                <th class="p-3 border-r border-gray-300 text-center">Heure</th>
+                <th class="p-3 border-r border-gray-300 text-center">
+                  Température
+                </th>
+                <th class="p-3 border-r border-gray-300 text-center">Temps</th>
+                <th class="p-3 border-r border-gray-300 text-center">
+                  Pluie/Neige
+                </th>
+                <th class="p-3 border-r border-gray-300 text-center">Vent</th>
+                <th class="p-3 border-r border-gray-300 text-center">
+                  Humidité
+                </th>
+                <th class="p-3 border-r border-gray-300 text-center">
+                  Température ressentie
+                </th>
+                <th class="p-3 border-r border-gray-300 text-center">
+                  Précipitations
+                </th>
+                <th class="p-3 text-center">UV</th>
+              </tr>
+            </thead>
 
-          <!-- Températures -->
-          <p><strong class="text-base">Température moyenne:</strong> 
-            <span id="forecast-avgtemp-c" data-weather="avgtemp_c" class="text-blue-300">--</span> °C / 
-            <span id="forecast-avgtemp-f" data-weather="avgtemp_f" class="text-blue-300">--</span> °F
-          </p>
-          <p><strong class="text-base">Température maximale:</strong> 
-            <span id="forecast-maxtemp-c" data-weather="maxtemp_c" class="text-blue-300">--</span> °C / 
-            <span id="forecast-maxtemp-f" data-weather="maxtemp_f" class="text-blue-300">--</span> °F
-          </p>
-          <p><strong class="text-base">Température minimale:</strong> 
-            <span id="forecast-mintemp-c" data-weather="mintemp_c" class="text-blue-300">--</span> °C / 
-            <span id="forecast-mintemp-f" data-weather="mintemp_f" class="text-blue-300">--</span> °F
-          </p>
+            <tbody
+              id="hourly-forecast-data"
+              data-forecast="hourly"
+              class="bg-gray-900 text-white"
+            >
+              <!-- Les lignes seront ajoutées dynamiquement ici -->
+            </tbody>
+          </table>
+        </section>
 
-          <!-- Précipitations -->
-          <p><strong class="text-base">Précipitations totales:</strong> 
-            <span id="forecast-totalprecip-mm" data-weather="totalprecip_mm" class="text-blue-300">--</span> mm / 
-            <span id="forecast-totalprecip-in" data-weather="totalprecip_in" class="text-blue-300">--</span> in
-          </p>
-          <p><strong class="text-base">Neige totale:</strong> 
-            <span id="forecast-totalsnow-cm" data-weather="totalsnow_cm" class="text-blue-300">--</span> cm
-          </p>
+        <!-- Section pour les prévisions de demain -->
+        <section
+          id="forecast-day"
+          data-section="forecast"
+          class="bg-gray-800 p-6 rounded-lg shadow-lg mt-6"
+        >
+          <h2 class="text-2xl font-semibold">Prévisions de demain</h2>
+          <div
+            class="weather-info grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4"
+          >
+            <!-- Conditions -->
+            <p class="flex items-center">
+              <strong class="text-base">Code Météo:</strong>
+              <span
+                id="forecast-weather-code"
+                data-weather="condition.code"
+                class="ml-2 text-blue-300"
+                >--</span
+              >
+            </p>
+            <p class="flex items-center">
+              <strong class="text-base">Conditions météorologiques:</strong>
+              <span
+                id="forecast-condition"
+                data-weather="condition.text"
+                class="ml-2 text-blue-300"
+                >--</span
+              >
+              <img
+                id="forecast-icon"
+                data-weather="condition.icon"
+                class="w-8 h-8 ml-2"
+              />
+            </p>
 
-          <!-- Probabilités -->
-          <p><strong class="text-base">Probabilité de pluie:</strong> 
-            <span id="forecast-rain-chance" data-weather="daily_chance_of_rain" class="text-blue-300">--</span>%
-          </p>
-          <p><strong class="text-base">Probabilité de neige:</strong> 
-            <span id="forecast-snow-chance" data-weather="daily_chance_of_snow" class="text-blue-300">--</span>%
-          </p>
-          <p><strong class="text-base">Pluie prévue:</strong> 
-            <span id="forecast-will-it-rain" data-weather="daily_will_it_rain" class="text-blue-300">--</span>
-          </p>
-          <p><strong class="text-base">Neige prévue:</strong> 
-            <span id="forecast-will-it-snow" data-weather="daily_will_it_snow" class="text-blue-300">--</span>
-          </p>
+            <!-- Températures -->
+            <p>
+              <strong class="text-base">Température moyenne:</strong>
+              <span
+                id="forecast-avgtemp-c"
+                data-weather="avgtemp_c"
+                class="text-blue-300"
+                >--</span
+              >
+              °C /
+              <span
+                id="forecast-avgtemp-f"
+                data-weather="avgtemp_f"
+                class="text-blue-300"
+                >--</span
+              >
+              °F
+            </p>
+            <p>
+              <strong class="text-base">Température maximale:</strong>
+              <span
+                id="forecast-maxtemp-c"
+                data-weather="maxtemp_c"
+                class="text-blue-300"
+                >--</span
+              >
+              °C /
+              <span
+                id="forecast-maxtemp-f"
+                data-weather="maxtemp_f"
+                class="text-blue-300"
+                >--</span
+              >
+              °F
+            </p>
+            <p>
+              <strong class="text-base">Température minimale:</strong>
+              <span
+                id="forecast-mintemp-c"
+                data-weather="mintemp_c"
+                class="text-blue-300"
+                >--</span
+              >
+              °C /
+              <span
+                id="forecast-mintemp-f"
+                data-weather="mintemp_f"
+                class="text-blue-300"
+                >--</span
+              >
+              °F
+            </p>
 
-          <!-- Autres mesures -->
-          <p><strong class="text-base">Humidité moyenne:</strong> 
-            <span id="forecast-avghumidity" data-weather="avghumidity" class="text-blue-300">--</span>%
-          </p>
-          <p><strong class="text-base">UV:</strong> 
-            <span id="forecast-uv" data-weather="uv" class="text-blue-300">--</span>
-          </p>
+            <!-- Précipitations -->
+            <p>
+              <strong class="text-base">Précipitations totales:</strong>
+              <span
+                id="forecast-totalprecip-mm"
+                data-weather="totalprecip_mm"
+                class="text-blue-300"
+                >--</span
+              >
+              mm /
+              <span
+                id="forecast-totalprecip-in"
+                data-weather="totalprecip_in"
+                class="text-blue-300"
+                >--</span
+              >
+              in
+            </p>
+            <p>
+              <strong class="text-base">Neige totale:</strong>
+              <span
+                id="forecast-totalsnow-cm"
+                data-weather="totalsnow_cm"
+                class="text-blue-300"
+                >--</span
+              >
+              cm
+            </p>
 
-          <!-- Vent -->
-          <p><strong class="text-base">Vitesse max. du vent:</strong> 
-            <span id="forecast-maxwind-kph" data-weather="maxwind_kph" class="text-blue-300">--</span> km/h / 
-            <span id="forecast-maxwind-mph" data-weather="maxwind_mph" class="text-blue-300">--</span> mph
-          </p>
+            <!-- Probabilités -->
+            <p>
+              <strong class="text-base">Probabilité de pluie:</strong>
+              <span
+                id="forecast-rain-chance"
+                data-weather="daily_chance_of_rain"
+                class="text-blue-300"
+                >--</span
+              >%
+            </p>
+            <p>
+              <strong class="text-base">Probabilité de neige:</strong>
+              <span
+                id="forecast-snow-chance"
+                data-weather="daily_chance_of_snow"
+                class="text-blue-300"
+                >--</span
+              >%
+            </p>
+            <p>
+              <strong class="text-base">Pluie prévue:</strong>
+              <span
+                id="forecast-will-it-rain"
+                data-weather="daily_will_it_rain"
+                class="text-blue-300"
+                >--</span
+              >
+            </p>
+            <p>
+              <strong class="text-base">Neige prévue:</strong>
+              <span
+                id="forecast-will-it-snow"
+                data-weather="daily_will_it_snow"
+                class="text-blue-300"
+                >--</span
+              >
+            </p>
 
-          <!-- Visibilité -->
-          <p><strong class="text-base">Visibilité moyenne:</strong> 
-            <span id="forecast-avgvis-km" data-weather="avgvis_km" class="text-blue-300">--</span> km / 
-            <span id="forecast-avgvis-miles" data-weather="avgvis_miles" class="text-blue-300">--</span> miles
-          </p>
-        </div>
-      </section>
+            <!-- Autres mesures -->
+            <p>
+              <strong class="text-base">Humidité moyenne:</strong>
+              <span
+                id="forecast-avghumidity"
+                data-weather="avghumidity"
+                class="text-blue-300"
+                >--</span
+              >%
+            </p>
+            <p>
+              <strong class="text-base">UV:</strong>
+              <span id="forecast-uv" data-weather="uv" class="text-blue-300"
+                >--</span
+              >
+            </p>
 
+            <!-- Vent -->
+            <p>
+              <strong class="text-base">Vitesse max. du vent:</strong>
+              <span
+                id="forecast-maxwind-kph"
+                data-weather="maxwind_kph"
+                class="text-blue-300"
+                >--</span
+              >
+              km/h /
+              <span
+                id="forecast-maxwind-mph"
+                data-weather="maxwind_mph"
+                class="text-blue-300"
+                >--</span
+              >
+              mph
+            </p>
 
-    
+            <!-- Visibilité -->
+            <p>
+              <strong class="text-base">Visibilité moyenne:</strong>
+              <span
+                id="forecast-avgvis-km"
+                data-weather="avgvis_km"
+                class="text-blue-300"
+                >--</span
+              >
+              km /
+              <span
+                id="forecast-avgvis-miles"
+                data-weather="avgvis_miles"
+                class="text-blue-300"
+                >--</span
+              >
+              miles
+            </p>
+          </div>
+        </section>
+      </div>
     </main>
-</div>
 
- <footer class="bg-gray-800 flex justify-center items-center p-4 text-center text-white mt-6 rounded-lg shadow-lg fixed bottom-0 w-full h-2">
+    <footer
+      class="bg-gray-800 flex justify-center items-center p-4 text-center text-white mt-6 rounded-lg shadow-lg fixed bottom-0 w-full h-2"
+    >
       <p class="text-xm opacity-80">
-        Données fournies par 
-        <a href="https://open-meteo.com/" target="_blank" class="text-blue-400 hover:underline text-xm">Open-Meteo</a>
+        Données fournies par
+        <a
+          href="https://open-meteo.com/"
+          target="_blank"
+          class="text-blue-400 hover:underline text-xm"
+          >Open-Meteo</a
+        >
       </p>
     </footer>
   </body>

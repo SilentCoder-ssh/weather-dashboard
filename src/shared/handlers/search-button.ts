@@ -115,9 +115,9 @@ const searchButton: HTMLButtonElement = document.querySelector(
   "#search-button"
 )! as HTMLButtonElement;
 
-const titleInput: HTMLParagraphElement = document.querySelector(
-  "#title-input"
-)! as HTMLParagraphElement;
+const svgLocation: SVGElement = document.querySelector(
+  "#svg-location"
+)! as SVGElement;
 
 const tbody = document.querySelector(
   "#hourly-forecast-data"
@@ -138,7 +138,7 @@ const getDatasetWeather = (data: WeatherData) => {
       if (data?.condition?.icon) {
         iconElement.src = data.condition.icon;
         iconElement.alt = "icon-condition";
-        iconElement.classList.add("w-8")
+        iconElement.classList.add("w-8");
         iconElement.classList.add("h-8");
         iconElement.classList.add("ml-2");
       }
@@ -234,12 +234,12 @@ searchButton?.addEventListener("click", async (_) => {
     const hourlyData = weatherHourlyData.forecast.forecastday[0].hour;
     createTbodyHTML(hourlyData);
 
-    titleInput.classList.add("text-green-5");
-    if (titleInput.classList.contains("text-red-5")) {
-      titleInput.classList.replace("text-red-5", "title-green-5");
+    svgLocation.classList.add("text-green-5");
+    if (svgLocation.classList.contains("text-red-5")) {
+      svgLocation.classList.replace("text-red-5", "title-green-5");
     }
   } catch (error) {
     console.error("Erreur de fetch des datas : ", error);
-    titleInput.classList.add("text-red-5");
+    svgLocation.classList.add("text-red-5");
   }
 });
