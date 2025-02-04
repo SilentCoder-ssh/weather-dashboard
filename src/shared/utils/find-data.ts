@@ -6,7 +6,7 @@ export const locationInput: HTMLInputElement = document.querySelector(
 
 export async function findData(Time: string, cityName: string): Promise<any> {
   const racine = "https://api.weatherapi.com/v1";
-  const url = `${racine}/${Time}.json?key=${apiKey}&q=${cityName}`;
+  const url = `${racine}/${Time}.json?key=${apiKey}&lang=fr&q=${cityName}`;
   let data;
 
   try {
@@ -16,10 +16,7 @@ export async function findData(Time: string, cityName: string): Promise<any> {
       throw new Error(`Erreur HTTP: ${response.status}`);
     }
 
-    
-    
-
-      data = await response.json();
+    data = await response.json();
     //console.log("Données reçues : ", data);
   } catch (error) {
     console.error("Erreur lors de la récupération des données : ", error);
